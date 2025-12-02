@@ -18,20 +18,20 @@ O projeto foi construído utilizando conceitos de **Mobile First**, **Design Res
 
 ## 🚀 Funcionalidades Principais
 
-[cite_start]O sistema atende aos Requisitos Funcionais (RF) e Não Funcionais (RNF) propostos[cite: 34, 41]:
+O sistema atende aos Requisitos Funcionais (RF) e Não Funcionais (RNF) propostos:
 
-### [cite_start]👤 Módulo do Paciente [cite: 35]
+### 👤 Módulo do Paciente 
 - **Dashboard:** Visão geral e acesso rápido.
 - **Agendamento:** Marcação de consultas presenciais e online.
 - **Histórico:** Visualização de prontuário e receitas.
 - **Telemedicina:** Simulação de videochamada com acesso à câmera real (WebRTC).
 
-### [cite_start]🩺 Módulo do Profissional de Saúde [cite: 36]
+### 🩺 Módulo do Profissional de Saúde 
 - **Agenda Médica:** Gestão de pacientes do dia.
 - **Prontuário Eletrônico:** Registro de evolução clínica.
 - **Receita Digital:** Emissão e assinatura digital (simulada).
 
-### [cite_start]⚙️ Módulo Administrativo [cite: 37]
+### ⚙️ Módulo Administrativo 
 - **Dashboard de Gestão:** Indicadores de atendimentos e ocupação.
 - **Controle de Leitos:** Mapa visual de ocupação hospitalar.
 - **Gestão de Usuários:** Controle de cadastros e permissões.
@@ -68,6 +68,5 @@ Para que a **câmera (Telemedicina)** funcione corretamente, os navegadores exig
 
 ### Passo a Passo
 
-1. **Clone o repositório:**
-   ```bash
-   git clone [https://github.com/SEU-USUARIO/SGHSS-Frontend.git](https://github.com/SEU-USUARIO/SGHSS-Frontend.git)
+1. Acesse o link:
+   https://elegant-stardust-fdc1c6.netlify.app/
