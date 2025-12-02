@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SGHSS - VidaPlus Health</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="auth-screen" class="d-flex justify-content-center align-items-center min-vh-100 p-3 bg-auth-gradient">
+        <div class="card glass-card border-0 p-4 w-100 fade-in" style="max-width: 420px;">
+            <div class="text-center mb-5">
+                <div class="logo-circle mb-3 mx-auto shadow-sm">
+                    <i class="bi bi-heart-pulse-fill text-white fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-0">VidaPlus</h3>
+                <small class="text-muted text-uppercase ls-1">Gestão Hospitalar</small>
+            </div>
+
+            <form id="form-login" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-floating mb-3">
+                    <input type="email" id="login-email" class="form-control" placeholder="Email" required>
+                    <label>E-mail Corporativo ou Pessoal</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input type="password" id="login-password" class="form-control" placeholder="Senha" required>
+                    <label>Senha</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3 shadow-primary">Entrar no Sistema</button>
+                <div class="d-flex justify-content-between small px-1">
+                    <a href="#" class="text-decoration-none text-secondary" onclick="toggleAuth('forgot')">Esqueci a senha</a>
+                    <a href="#" class="text-decoration-none fw-bold text-primary" onclick="toggleAuth('register')">Criar conta</a>
+                </div>
+                <div class="mt-4 p-3 bg-light rounded small text-muted border border-dashed">
+                    <strong>Acesso Rápido (Teste):</strong><br>
+                    Paciente: <code>paciente@vidaplus.com</code> / <code>123</code><br>
+                    Médico: <code>medico@vidaplus.com</code> / <code>123</code><br>
+                    Admin: <code>admin@vidaplus.com</code> / <code>123</code>
+                </div>
+            </form>
+
+            <form id="form-register" class="auth-form d-none" onsubmit="handleRegister(event)">
+                <h5 class="fw-bold mb-3 text-primary">Novo Paciente</h5>
+                <div class="form-floating mb-2">
+                    <input type="text" id="reg-name" class="form-control" placeholder="Nome" required>
+                    <label>Nome Completo</label>
+                </div>
+                <div class="form-floating mb-2">
+                    <input type="email" id="reg-email" class="form-control" placeholder="Email" required>
+                    <label>E-mail</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input type="password" id="reg-password" class="form-control" placeholder="Senha" required>
+                    <label>Senha</label>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg w-100 mb-2">Concluir Cadastro</button>
+                <button type="button" class="btn btn-light w-100 text-muted" onclick="toggleAuth('login')">Voltar</button>
+            </form>
+
+            <form id="form-forgot" class="auth-form d-none" onsubmit="handleForgot(event)">
+                <h5 class="fw-bold mb-3 text-warning">Recuperar Acesso</h5>
+                <p class="small text-muted mb-4">Informe seu e-mail para receber o link de redefinição.</p>
+                <div class="form-floating mb-4">
+                    <input type="email" class="form-control" placeholder="Email" required>
+                    <label>Seu E-mail Cadastrado</label>
+                </div>
+                <button type="submit" class="btn btn-warning text-white btn-lg w-100 mb-2">Enviar Link</button>
+                <button type="button" class="btn btn-light w-100 text-muted" onclick="toggleAuth('login')">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-screen" class="d-none flex-column h-100 bg-body-tertiary">
+        
+        <nav class="navbar navbar-expand-lg glass-header fixed-top px-3 shadow-sm d-lg-none">
+            <div class="container-fluid g-0">
+                <button class="btn btn-light rounded-circle border-0 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                    <i class="bi bi-list fs-4 text-primary"></i>
+                </button>
+                <a class="navbar-brand fw-bold d-flex align-items-center gap-2 text-dark" href="#">
+                    <i class="bi bi-heart-pulse-fill text-primary"></i> VidaPlus
+                </a>
+                <div class="user-avatar-small rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" id="mobile-avatar">U</div>
+            </div>
+        </nav>
+
+        <div class="offcanvas-lg offcanvas-start sidebar-modern shadow-end" tabindex="-1" id="sidebarMenu">
+            <div class="offcanvas-header border-bottom p-4">
+                <h5 class="offcanvas-title fw-bold text-primary"><i class="bi bi-heart-pulse-fill me-2"></i>VidaPlus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"></button>
+            </div>
+            
+            <div class="d-none d-lg-flex flex-column align-items-center py-4 border-bottom bg-light bg-opacity-50">
+                <div class="logo-circle mb-2 shadow-sm" style="width: 50px; height: 50px;">
+                    <i class="bi bi-heart-pulse-fill text-white fs-4"></i>
+                </div>
+                <h6 class="fw-bold m-0">SGHSS</h6>
+                <small class="text-muted" style="font-size: 0.7rem;">Versão 1.0.4</small>
+            </div>
+
+            <div class="offcanvas-body d-flex flex-column h-100 p-3">
+                <div class="small text-uppercase text-muted fw-bold mb-3 ls-1 mt-2 ps-2">Menu Principal</div>
+                <div class="list-group list-group-flush gap-1" id="sidebar-menu">
+                    </div>
+                
+                <div class="mt-auto border-top pt-3">
+                    <div class="d-flex align-items-center gap-3 p-2 rounded-3 bg-light border">
+                        <div class="user-avatar-small rounded-circle bg-secondary text-white fw-bold d-flex align-items-center justify-content-center" id="desktop-avatar">U</div>
+                        <div class="overflow-hidden">
+                            <div class="fw-bold text-truncate" id="user-name-display">Usuário</div>
+                            <div class="small text-muted text-truncate" id="user-role-display">Cargo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-content flex-grow-1 pt-5 pt-lg-0">
+            <div class="container-fluid p-3 p-lg-5">
+                
+                <header class="d-none d-lg-flex justify-content-between align-items-center mb-5 fade-in">
+                    <div>
+                        <h2 class="fw-bold m-0 text-dark" id="page-title">Visão Geral</h2>
+                        <p class="text-muted m-0">Bem-vindo ao sistema de gestão unificada.</p>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <button class="btn btn-white shadow-sm border rounded-circle position-relative">
+                            <i class="bi bi-bell"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                        </button>
+                        <button class="btn btn-white shadow-sm border rounded-circle"><i class="bi bi-gear"></i></button>
+                    </div>
+                </header>
+
+                <h4 class="fw-bold d-lg-none mt-3 mb-4 ps-1" id="page-title-mobile">Início</h4>
+
+                <section id="painel-paciente" class="app-section">
+                    <div class="row g-3">
+                        <div class="col-12 col-xl-8">
+                            <div class="card bg-primary text-white border-0 shadow-primary p-4 rounded-4 position-relative overflow-hidden h-100">
+                                <div class="position-relative z-1">
+                                    <h2 class="fw-bold mb-2">Como você está hoje?</h2>
+                                    <p class="opacity-75 mb-4" style="max-width: 400px;">Agende consultas, veja seus exames e acesse telemedicina de forma rápida e segura.</p>
+                                    <button class="btn btn-light text-primary fw-bold rounded-pill px-4 shadow-sm" onclick="navigateTo('agendamento')">
+                                        <i class="bi bi-plus-lg me-2"></i>Novo Agendamento
+                                    </button>
+                                </div>
+                                <i class="bi bi-heart-pulse position-absolute bottom-0 end-0 opacity-10" style="font-size: 15rem; transform: translate(20%, 20%);"></i>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-2">
+                            <div class="card border-0 shadow-sm p-3 h-100 text-center rounded-4 hover-card" onclick="navigateTo('meus-agendamentos')">
+                                <div class="icon-box bg-success bg-opacity-10 text-success mb-3 mx-auto rounded-circle">
+                                    <i class="bi bi-calendar-check fs-4"></i>
+                                </div>
+                                <h6 class="fw-bold m-0">Minhas<br>Consultas</h6>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-2">
+                            <div class="card border-0 shadow-sm p-3 h-100 text-center rounded-4 hover-card" onclick="navigateTo('historico-clinico')">
+                                <div class="icon-box bg-warning bg-opacity-10 text-warning mb-3 mx-auto rounded-circle">
+                                    <i class="bi bi-file-medical fs-4"></i>
+                                </div>
+                                <h6 class="fw-bold m-0">Meu<br>Prontuário</h6>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="agendamento" class="app-section d-none">
+                    <div class="card border-0 shadow-sm p-4 rounded-4" style="max-width: 800px; margin: 0 auto;">
+                        <h5 class="fw-bold mb-4">Detalhes da Consulta</h5>
+                        <form onsubmit="handleNewAppointment(event)">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-muted">ESPECIALIDADE</label>
+                                    <select id="ag-especialidade" class="form-select form-select-lg bg-light border-0">
+                                        <option>Clínico Geral</option>
+                                        <option>Cardiologia</option>
+                                        <option>Dermatologia</option>
+                                        <option>Pediatria</option>
+                                        <option>Ortopedia</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small text-muted">MODALIDADE</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <input type="radio" class="btn-check" name="btnradio" id="ag-tipo-1" value="Presencial" autocomplete="off">
+                                        <label class="btn btn-outline-primary btn-lg" for="ag-tipo-1">Presencial</label>
+                                        <input type="radio" class="btn-check" name="btnradio" id="ag-tipo-2" value="Telemedicina" autocomplete="off" checked>
+                                        <label class="btn btn-outline-primary btn-lg" for="ag-tipo-2"><i class="bi bi-camera-video me-2"></i>Online</label>
+                                    </div>
+                                    <input type="hidden" id="ag-tipo" value="Telemedicina">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-bold small text-muted">DATA PREFERIDA</label>
+                                    <input type="date" id="ag-data" class="form-control form-control-lg bg-light border-0" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-bold small text-muted">HORÁRIO</label>
+                                    <input type="time" id="ag-hora" class="form-control form-control-lg bg-light border-0" required>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill shadow-primary">Confirmar Agendamento</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="meus-agendamentos" class="app-section d-none">
+                    <div class="card border-0 shadow-sm p-0 rounded-4 overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0 table-hover">
+                                <thead class="bg-light small text-muted text-uppercase">
+                                    <tr><th class="p-3 ps-4">Data/Hora</th><th>Especialidade</th><th>Status</th><th class="text-end pe-4">Ação</th></tr>
+                                </thead>
+                                <tbody id="lista-agendamentos-paciente" class="bg-white"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="historico-clinico" class="app-section d-none">
+                    <div id="conteudo-historico" class="d-flex flex-column gap-3"></div>
+                </section>
+
+                <section id="painel-medico" class="app-section d-none">
+                    <h5 class="fw-bold mb-3">Pacientes Aguardando</h5>
+                    <div id="lista-agenda-medico" class="row g-3"></div>
+                </section>
+
+                <section id="atendimento" class="app-section d-none">
+                    <div class="row g-3 h-100">
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-sm p-4 rounded-4 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="fw-bold m-0"><i class="bi bi-file-medical me-2 text-primary"></i>Evolução Clínica</h5>
+                                    <span class="badge bg-light text-dark border">Consulta #<span id="atend-id-display">--</span></span>
+                                </div>
+                                <input type="hidden" id="atend-paciente-id">
+                                <input type="hidden" id="atend-app-id">
+                                
+                                <div class="mb-4">
+                                    <label class="fw-bold small text-muted mb-2">ANAMNESE E DIAGNÓSTICO</label>
+                                    <textarea id="atend-descricao" class="form-control bg-light border-0 p-3" rows="8" placeholder="Descreva os sintomas e observações do paciente..."></textarea>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="fw-bold small text-muted mb-2">PRESCRIÇÃO (RECEITA DIGITAL)</label>
+                                    <textarea id="atend-receita" class="form-control bg-light border-0 p-3" rows="4" placeholder="Medicamentos, dosagem e instruções..."></textarea>
+                                </div>
+                                
+                                <button onclick="saveAtendimento(event)" class="btn btn-primary w-100 btn-lg rounded-pill shadow-sm">
+                                    <i class="bi bi-check2-circle me-2"></i>Finalizar Atendimento e Assinar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border-0 shadow-sm p-4 rounded-4 bg-info bg-opacity-10 h-100">
+                                <h6 class="fw-bold text-info-emphasis mb-3">Ações Rápidas</h6>
+                                <button class="btn btn-white w-100 mb-2 text-start fw-bold text-dark shadow-sm" onclick="alert('Histórico carregado!')"><i class="bi bi-clock-history me-2 text-muted"></i> Ver Histórico</button>
+                                <button class="btn btn-white w-100 mb-2 text-start fw-bold text-dark shadow-sm"><i class="bi bi-file-earmark-pdf me-2 text-muted"></i> Solicitar Exames</button>
+                                <hr class="border-info opacity-25">
+                                <div class="alert alert-warning border-0 small">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Paciente alérgico a Dipirona.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="painel-admin" class="app-section d-none">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-4">
+                            <div class="card border-0 shadow-sm p-4 rounded-4 bg-white">
+                                <div class="d-flex justify-content-between">
+                                    <div><h2 class="fw-bold mb-0 text-primary">150</h2><small class="text-muted">Pacientes Ativos</small></div>
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle"><i class="bi bi-people fs-4"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card border-0 shadow-sm p-4 rounded-4 bg-white">
+                                <div class="d-flex justify-content-between">
+                                    <div><h2 class="fw-bold mb-0 text-success">23</h2><small class="text-muted">Médicos Plantonistas</small></div>
+                                    <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle"><i class="bi bi-heart-pulse fs-4"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card border-0 shadow-sm p-4 rounded-4 bg-white">
+                                <div class="d-flex justify-content-between">
+                                    <div><h2 class="fw-bold mb-0 text-warning">85%</h2><small class="text-muted">Ocupação Leitos</small></div>
+                                    <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle"><i class="bi bi-hospital fs-4"></i></div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;"><div class="progress-bar bg-warning" style="width: 85%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="gestao-cadastros" class="app-section d-none">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0"><thead class="bg-light"><tr><th class="ps-4">Nome</th><th>Email</th><th>Função</th><th>Status</th></tr></thead><tbody id="tabela-usuarios"></tbody></table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="controle-leitos" class="app-section d-none">
+                    <div class="row g-3" id="grid-leitos"></div>
+                </section>
+
+                <section id="relatorios" class="app-section d-none">
+                    <div class="list-group list-group-flush rounded-4 bg-white shadow-sm">
+                        <a href="#" class="list-group-item list-group-item-action p-4 d-flex align-items-center"><i class="bi bi-file-earmark-pdf-fill fs-3 text-danger me-3"></i><div><h6 class="m-0 fw-bold">Relatório Financeiro.pdf</h6><small class="text-muted">Gerado em 01/10/2025</small></div></a>
+                        <a href="#" class="list-group-item list-group-item-action p-4 d-flex align-items-center"><i class="bi bi-shield-lock-fill fs-3 text-primary me-3"></i><div><h6 class="m-0 fw-bold">Auditoria LGPD.pdf</h6><small class="text-muted">Compliance Segurança</small></div></a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <section id="tela-telemedicina" class="d-none position-fixed top-0 start-0 w-100 h-100 z-index-modal bg-black overflow-hidden">
+        
+        <div class="position-absolute w-100 h-100">
+            <video id="video-remote" class="w-100 h-100 object-fit-cover" loop playsinline poster="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80">
+                <source src="medico.mp4" type="video/mp4">
+            </video>
+            <div class="position-absolute top-0 start-0 w-100 h-100 video-overlay"></div>
+        </div>
+
+        <div class="position-absolute top-0 start-0 w-100 p-4 d-flex justify-content-between align-items-start z-10">
+            <div class="text-white drop-shadow">
+                <h4 class="fw-bold mb-0">Dr. House</h4>
+                <small class="opacity-75">Cardiologia • Hospital VidaPlus</small>
+                <div class="mt-2 d-flex align-items-center gap-2">
+                    <span class="badge bg-danger animate-pulse border border-danger border-opacity-25">● AO VIVO</span>
+                    <span id="call-timer" class="badge bg-dark bg-opacity-50 backdrop-blur font-monospace">00:00</span>
+                </div>
+            </div>
+            
+            <div class="local-video-wrapper rounded-4 overflow-hidden shadow-lg border border-2 border-white border-opacity-25 bg-black position-relative">
+                <video id="video-local" class="w-100 h-100 object-fit-cover" autoplay muted playsinline></video>
+                <div id="camera-off-msg" class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-dark text-white d-none">
+                    <i class="bi bi-camera-video-off fs-5 mb-1"></i><span style="font-size: 0.6rem;">OFF</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="position-absolute bottom-0 w-100 pb-5 d-flex justify-content-center gap-4 z-10">
+            <button id="btn-mic" class="btn-control glass-btn" onclick="toggleMic()"><i class="bi bi-mic-fill fs-4"></i></button>
+            <button class="btn-control bg-danger text-white shadow-lg scale-hover" onclick="endCall()"><i class="bi bi-telephone-x-fill fs-3"></i></button>
+            <button id="btn-cam" class="btn-control glass-btn" onclick="toggleCam()"><i class="bi bi-camera-video-fill fs-4"></i></button>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
